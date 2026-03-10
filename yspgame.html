@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小遊戲：剪刀石頭布</title>
+    <style>
+        :root {
+            --primary-bg: #f0f2f5;
+            --card-bg: #ffffff;
+            --accent: #ff9f43;
+        }
+
+        body {
+            font-family: 'PingFang TC', sans-serif;
+            background-color: var(--primary-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #555;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .choice-btn {
+            font-size: 2.5rem;
+            background: #eee;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+        }
+
+        #result-display {
+            margin-top: 20px;
+            min-height: 100px;
+        }
+
+        .battle-icons {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+
+        .message {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            background: none;
+            border: 1px solid #ccc;
+            color: #888;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-card">
+    <h2>✊ 猜拳大賽 🖐️</h2>
+    
+    <div class="score-board">
+        <div>玩家: <span id="player-score">0</span></div>
+        <div>電腦: <span id="computer-score">0</span></div>
+    </div>
+
+    <div class="choices">
+        <button class="choice-btn" onclick="play('🪨')">🪨</button>
+        <button class="choice-btn" onclick="play('✂️')">✂️</button>
+        <button class="choice-btn" onclick="play('📜')">📜</button>
+    </div>
+
+    <div id="result-display">
+        <div class="message">準備好了嗎？</div>
+        <div class="battle-icons">🆚</div>
+    </div>
+
+    <button class="reset-btn" onclick="resetGame()">重置比分</button>
+</div>
+
+<script>
+    const choices = ['🪨', '✂️', '📜'];
+    const playerWinMap = { '🪨': '✂️', '✂️': '📜', '📜': '🪨' };
+
+    let playerScore = parseInt(localStorage.getItem('rps-player-score')) || 0;
+    let computerScore = parseInt(localStorage.getItem('rps-computer-score')) || 0;
+
+    // 初始化更新分數
+    updateScoreUI();
+
+    function play(playerChoice) {
+        // 電腦隨機出拳
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+        
+        let message = "";
+        
+        if (playerChoice === computerChoice) {
+            message = "平手！🤝";
+        } else if (playerWinMap[playerChoice] === computerChoice) {
+            message = "你贏了！🎉";
+            playerScore++;
+        } else {
+            message = "電腦贏了...🤖";
+            computerScore++;
+        }
+
+        // 儲存分數
+        localStorage.setItem('rps-player-score', playerScore);
+        localStorage.setItem('rps-computer-score', computerScore);
+
+        // 更新畫面
+        renderResult(playerChoice, computerChoice, message);
+        updateScoreUI();
+    }
+
+    function renderResult(p, c, msg) {
+        const display = document.getElementById('result-display');
+        display.innerHTML = `
+            <div class="battle-icons">${p} VS ${c}</div>
+            <div class="message">${msg}</div>
+        `;
+    }
+
+    function updateScoreUI() {
+        document.getElementById('player-score').innerText = playerScore;
+        document.getElementById('computer-score').innerText = computerScore;
+    }
+
+    function resetGame() {
+        playerScore = 0;
+        computerScore = 0;
+        localStorage.clear();
+        updateScoreUI();
+        document.getElementById('result-display').innerHTML = `
+            <div class="message">分數已歸零</div>
+            <div class="battle-icons">🆚</div>
+        `;
+    }
+</script>
+
+</body>
+</html>

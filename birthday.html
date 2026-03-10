@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日星期查詢器</title>
+    <style>
+        :root {
+            --accent-color: #a29bfe;
+            --bg-grad: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: var(--bg-grad);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #2d3436;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 320px;
+        }
+
+        h2 { margin-bottom: 1.5rem; color: #6c5ce7; }
+
+        .input-group { margin-bottom: 1.5rem; }
+
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="date"]:focus { border-color: var(--accent-color); }
+
+        #result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f2f6;
+            border-radius: 10px;
+            min-height: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .weekday-text {
+            font-size: 24px;
+            font-weight: 800;
+            color: #6c5ce7;
+            margin-top: 5px;
+        }
+
+        .history-note {
+            font-size: 12px;
+            color: #b2bec3;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🎂 生日星期計算</h2>
+    
+    <div class="input-group">
+        <label for="birthday">選擇你的出生日期</label>
+        <input type="date" id="birthday">
+    </div>
+
+    <div id="result-box">
+        <div id="status">請選擇日期</div>
+        <div id="weekday-display" class="weekday-text"></div>
+    </div>
+
+    <p class="history-note">系統會自動保存最後一次查詢</p>
+</div>
+
+<script>
+    const dateInput = document.getElementById('birthday');
+    const statusText = document.getElementById('status');
+    const weekdayDisplay = document.getElementById('weekday-display');
+
+    const weekMap = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+
+    // 1. 載入時檢查是否有存檔
+    window.onload = () => {
+        const savedDate = localStorage.getItem('lastBirthday');
+        if (savedDate) {
+            dateInput.value = savedDate;
+            calculateWeekday(savedDate);
+        }
+    };
+
+    // 2. 監聽日期變動 (自動計算)
+    dateInput.addEventListener('change', (e) => {
+        const selectedDate = e.target.value;
+        if (selectedDate) {
+            calculateWeekday(selectedDate);
+            localStorage.setItem('lastBirthday', selectedDate); // 自動存檔
+        }
+    });
+
+    // 3. 核心計算邏輯
+    function calculateWeekday(dateString) {
+        const date = new Date(dateString);
+        
+        // 檢查日期有效性
+        if (isNaN(date.getTime())) {
+            statusText.innerText = "日期格式錯誤";
+            weekdayDisplay.innerText = "";
+            return;
+        }
+
+        // getDay() 會回傳 0 (週日) 到 6 (週六)
+        const dayIndex = date.getDay();
+        const result = weekMap[dayIndex];
+
+        statusText.innerText = `${dateString} 是`;
+        weekdayDisplay.innerText = result;
+    }
+</script>
+
+</body>
+</html>

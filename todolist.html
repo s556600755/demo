@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的極簡備忘錄</title>
+    <style>
+        /* CSS 部分：負責外觀 */
+        :root {
+            --primary-color: #6c5ce7;
+            --bg-color: #f9f9f9;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgb(255, 161, 161);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 { text-align: center; color: #333; }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        input[type="text"]:focus { border-color: var(--primary-color); }
+
+        button#add-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button#add-btn:hover { opacity: 0.9; }
+
+        ul { list-style: none; padding: 0; }
+
+        li {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        li.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .delete-btn {
+            background: #ff7675;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        span { cursor: pointer; flex: 1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📝 備忘錄</h2>
+    <div class="input-group">
+        <input type="text" id="todo-input" placeholder="新增待辦事項...">
+        <button id="add-btn">新增</button>
+    </div>
+    <ul id="todo-list">
+        </ul>
+</div>
+
+<script>
+    const input = document.getElementById('todo-input');
+    const addBtn = document.getElementById('add-btn');
+    const todoList = document.getElementById('todo-list');
+
+    // 1. 初始化：從 localStorage 讀取資料，若沒有則給空陣列
+    let todos = JSON.parse(localStorage.getItem('myTodos')) || [];
+
+    // 2. 核心渲染函數：每次資料變動就呼叫它
+    function renderTodos() {
+        todoList.innerHTML = ''; // 清空目前的列表
+        
+        todos.forEach((todo, index) => {
+            const li = document.createElement('li');
+            if (todo.completed) li.classList.add('completed');
+            
+            li.innerHTML = `
+                <span onclick="toggleTask(${index})">${todo.text}</span>
+                <button class="delete-btn" onclick="deleteTask(${index})">刪除</button>
+            `;
+            todoList.appendChild(li);
+        });
+
+        // 將最新的陣列轉為字串存入 localStorage
+        localStorage.setItem('myTodos', JSON.stringify(todos));
+    }
+
+    // 3. 新增任務
+    function addTask() {
+        const text = input.value.trim();
+        if (text === "") return;
+        
+        todos.push({ text: text, completed: false });
+        input.value = "";
+        renderTodos();
+    }
+
+    // 4. 切換完成狀態
+    function toggleTask(index) {
+        todos[index].completed = !todos[index].completed;
+        renderTodos();
+    }
+
+    // 5. 刪除任務
+    function deleteTask(index) {
+        todos.splice(index, 1);
+        renderTodos();
+    }
+
+    // 綁定事件
+    addBtn.addEventListener('click', addTask);
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
+
+    // 初始頁面渲染
+    renderTodos();
+</script>
+
+</body>
+</html>
