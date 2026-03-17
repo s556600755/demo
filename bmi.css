@@ -1,0 +1,108 @@
+/* 1. 基礎重置：確保不同瀏覽器看起來一致 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft JhengHei", sans-serif;
+}
+
+/* 2. 背景設定：讓畫面置中 */
+body {
+    background-color: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center;     /* 垂直置中 */
+}
+
+/* 3. 主卡片容器 */
+.container {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 15px;    /* 圓角 */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* 柔和陰影 */
+    width: 100%;
+    max-width: 400px;       /* 限制最大寬度 */
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+/* 4. 輸入區塊排版 */
+.input-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #444;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s; /* 增加過渡動畫 */
+}
+
+/* 當輸入框被點擊時的顏色變化 */
+.input-group input:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+/* 5. 計算按鈕美化 */
+.count {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    margin-top: 10px;
+}
+
+.count:hover {
+    background-color: #357abd; /* 滑鼠移上去變深色 */
+}
+
+/* 6. 結果顯示區塊 */
+.result-display {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.output {
+    margin-top: 10px;
+    font-weight: bold;
+}
+body {
+    /* 使用 135度角斜向漸層 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
